@@ -1,9 +1,12 @@
 import express from 'express';
-import getAllLocations from '../controllers/locationController';
+import locationController from '../controllers/locationController';
 
 const router = express.Router();
 
-// GET request for list of all Book items.
-router.get("/", getAllLocations.getAllLocations);
+// GET request for list of all Book items
+router.get("/locations", locationController.getAllLocations);
+
+// GET request for location by id
+router.get("/locations/:id", locationController.getLocationById);
 
 export default router;
