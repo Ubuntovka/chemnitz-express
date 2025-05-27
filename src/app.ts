@@ -1,20 +1,17 @@
 import express from 'express';
 import locationRoutes from './routes/locationRoutes';
 import { errorHandler } from './middlewares/errorHandler';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { connect } from 'mongoose';
+import config from './config/config';
 const app = express();
 
 app.use(express.json());
 
-// Connection to Mongodb
-const mongoose = require('mongoose');
+run().catch(err => console.log(err));
 
-main().catch(err => console.log(err));
-
-async function main() {
-    await mongoose.connect(process.env.MONGODB_URI);
+// Connection to MongoDB
+async function run() {
+    await connect(config.mongodbUrl);
 }
 
 // Routes
