@@ -7,6 +7,12 @@ const getAllLocations = asyncHandler(async (req: Request, res: Response, next: N
     res.send(allLocations);
 });
 
+const getLocationById = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const oneLocation = await LocationModel.findById(req.params.id);
+    res.send(oneLocation);
+})
+
 export default {
     getAllLocations,
+    getLocationById,
 };
