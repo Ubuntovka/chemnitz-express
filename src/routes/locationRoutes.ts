@@ -9,4 +9,7 @@ router.get("/locations", locationController.getAllLocations);
 // GET request for location by id
 router.get("/locations/:id", locationController.getLocationById);
 
+// GET request fot locations by name search
+router.get("/search/location", locationController.getLocationBySearch);
+
 export default router;

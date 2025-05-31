@@ -3,8 +3,9 @@ import locationRoutes from './routes/locationRoutes';
 import { errorHandler } from './middlewares/errorHandler';
 import { connect } from 'mongoose';
 import config from './config/config';
-const app = express();
+import cors from "cors";
 
+const app = express();
 app.use(express.json());
 
 run().catch(err => console.log(err));
@@ -13,6 +14,8 @@ run().catch(err => console.log(err));
 async function run() {
     await connect(config.mongodbUrl);
 }
+
+app.use(cors());
 
 // Routes
 app.use('/', locationRoutes);
