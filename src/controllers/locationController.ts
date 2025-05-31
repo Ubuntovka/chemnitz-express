@@ -12,7 +12,15 @@ const getLocationById = asyncHandler(async (req: Request, res: Response, next: N
     res.send(oneLocation);
 })
 
+const getLocationBySearch = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const searchedLocation = await LocationModel.find({
+        'properties.name': { $regex: req.query.search, $options: 'i' }
+    });
+    res.send(searchedLocation);
+})
+
 export default {
     getAllLocations,
     getLocationById,
+    getLocationBySearch,
 };
