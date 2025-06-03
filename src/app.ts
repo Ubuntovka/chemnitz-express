@@ -4,6 +4,7 @@ import { errorHandler } from './middlewares/errorHandler';
 import { connect } from 'mongoose';
 import config from './config/config';
 import cors from "cors";
+import userRoutes from "./routes/userRoutes";
 
 const app = express();
 app.use(express.json());
@@ -19,6 +20,7 @@ app.use(cors());
 
 // Routes
 app.use('/', locationRoutes);
+app.use('/api/users/', userRoutes);
 
 // Global error handler (should be after routes)
 app.use(errorHandler);
