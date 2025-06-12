@@ -7,6 +7,7 @@ export interface IUser extends Document {
     name: string
     email: string
     password: string
+    favorite_locations: string[]
     tokens: { token: string }[]
 }
 
@@ -23,6 +24,7 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
+    favorite_locations: [{ type: String, required: false }],
     tokens: [{ token: { type: String, required: true } }],
 })
 
