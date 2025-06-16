@@ -67,12 +67,13 @@ router.post('/logoutall', auth, async (req: CustomRequest, res: Response) => {
 })
 
 // Add a favorite location
-router.post('/add-favorite', auth, async (req: CustomRequest, res: Response) => {
+router.post('/favorite/add', auth, async (req: CustomRequest, res: Response) => {
     const location = req.body.location
     if (!location) {
         return res.status(400).json({ error: 'Location is required.' })
     }
 
+    console.log("add", location)
     if(req.user && !req.user.favorite_locations.includes(location)) {
         req.user.favorite_locations.push(location);
         await req.user.save();
@@ -80,6 +81,24 @@ router.post('/add-favorite', auth, async (req: CustomRequest, res: Response) => 
 
     return res.status(200).json({
         message: 'Location added to favorites.',
+        // favorites: req.user?.favorite_locations,
+    });
+})
+
+router.post('/favorite/remove', auth, async (req: CustomRequest, res: Response) => {
+    const location = req.body.location
+    if (!location) {
+        return res.status(400).json({ error: 'Location is required.' })
+    }
+
+    if(req.user) {
+        console.log("remove", location)
+        req.user.favorite_locations = req.user.favorite_locations.filter((locationId) => {return locationId !== location});
+        await req.user.save();
+    }
+
+    return res.status(200).json({
+        message: 'Location removed from favorites.',
         // favorites: req.user?.favorite_locations,
     });
 })
@@ -102,14 +121,13 @@ router.post('/add-favorite', auth, async (req: CustomRequest, res: Response) => 
 //     })
 // })
 //
-// // Get all favorite locations
-// router.get('/favorites', auth, async (req: CustomRequest, res: Response) => {
-//     return res.status(200).json({
-//         favorites: req.user.favorite_locations,
-//     })
-// })
 
-
+// Get all favorite locations
+router.get('/favorites', auth, async (req: CustomRequest, res: Response) => {
+    return res.status(200).json(
+        req.user?.favorite_locations
+    )
+})
 
 
 export default router
