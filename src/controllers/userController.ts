@@ -41,3 +41,30 @@ export const loginUser = async (user: Partial<IUser>) => {
     }
 }
 
+export const updateUser = async (userId: string, updates: Partial<IUser>) => {
+    const allowedUpdates = ['name', 'email', 'password']
+    const updateFields = Object.keys(updates)
+
+    const user = await User.findById(userId)
+    if (!user) {
+        return { error: 'User not found.' }
+    }
+
+    let count = 0
+
+    updateFields.forEach((field) => {
+        if (allowedUpdates.includes(field) && (updates as any)[field] != '' && (updates as any)[field] != undefined) {
+            (user as any)[field] = (updates as any)[field]
+        } else {
+            count++;
+        }
+    })
+
+    if (count > 2) {
+        return { error: 'No data found.' }
+    }
+
+    await user.save()
+    return { user }
+}
+
