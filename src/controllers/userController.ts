@@ -41,13 +41,22 @@ export const loginUser = async (user: Partial<IUser>) => {
     }
 }
 
-export const updateUser = async (userId: string, updates: Partial<IUser>) => {
+export const updateUser = async (userId: string, oldPassword: string | undefined, updates: Partial<IUser>) => {
     const allowedUpdates = ['name', 'email', 'password']
     const updateFields = Object.keys(updates)
+
+    if (oldPassword === ''){
+        return {error: 'Please provide password.'}
+    }
 
     const user = await User.findById(userId)
     if (!user) {
         return { error: 'User not found.' }
+    }
+
+
+    if (!await User.findByCredentials(user.email, oldPassword!)) {
+        return { error: 'Wrong password' }
     }
 
     let count = 0

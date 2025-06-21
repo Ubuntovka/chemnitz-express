@@ -53,7 +53,7 @@ router.patch('/update', auth, async (req: CustomRequest, res: Response) => {
         return res.status(401).json({ error: 'Unauthorized' })
     }
 
-    const result = await updateUser(req.user._id.toString(), updates)
+    const result = await updateUser(req.user._id.toString(), req.body.oldPassword, updates)
 
     if (result.error) {
         return res.status(400).json({ error: result.error })
