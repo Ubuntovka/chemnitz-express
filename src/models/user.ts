@@ -9,6 +9,8 @@ export interface IUser extends Document {
     password: string
     favorite_locations: string[]
     tokens: { token: string }[]
+    visited_locations: string[]
+    ranking: number
 }
 
 export interface IUserMethods {
@@ -26,6 +28,8 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     password: { type: String, required: true },
     favorite_locations: [{ type: String, required: false }],
     tokens: [{ token: { type: String, required: true } }],
+    visited_locations: [{ type: String, required: false }],
+    ranking: { type: Number, default: 0 },
 })
 
 userSchema.pre('save', async function (next) {

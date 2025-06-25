@@ -77,3 +77,30 @@ export const updateUser = async (userId: string, oldPassword: string | undefined
     return { user }
 }
 
+export const updateRanking = async (userId: string, updates: Partial<IUser>) => {
+    const allowedUpdates = ['ranking']
+    const updateFields = Object.keys(updates)
+
+    const user = await User.findById(userId)
+    if (!user) {
+        return { error: 'User not found.' }
+    }
+
+    let count = 0
+
+    updateFields.forEach((field) => {
+        if (allowedUpdates.includes(field) && (updates as any)[field] != '' && (updates as any)[field] != undefined) {
+            (user as any)[field] += (updates as any)[field]
+        } else {
+            count++;
+        }
+    })
+
+    if (count > 1) {
+        return { error: 'No data found.' }
+    }
+
+    await user.save()
+    return { user }
+}
+
