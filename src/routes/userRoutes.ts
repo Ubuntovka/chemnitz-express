@@ -1,6 +1,6 @@
-import express, { Request, Response } from 'express'
+import express, {raw, Request, Response} from 'express'
 import { IUser } from '../models/user'
-import { loginUser, registerUser, updateUser } from '../controllers/userController'
+import {loginUser, registerUser, updateRanking, updateUser, getAllUsersAndRankings} from '../controllers/userController'
 import auth, { CustomRequest } from '../middlewares/auth'
 
 const router = express.Router()
@@ -10,6 +10,7 @@ router.post('/register', async (req: Request, res: Response) => {
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
+        ranking: 0,
     }
     const registeredUser = await registerUser(userData)
     if (registeredUser.error) {
@@ -131,6 +132,83 @@ router.get('/favorites', auth, async (req: CustomRequest, res: Response) => {
         req.user?.favorite_locations
     )
 })
+
+// Get all visited locations
+router.post('/visited/add', auth, async (req: CustomRequest, res: Response) => {
+    const location = req.body.location
+    if (!location) {
+        return res.status(400).json({ error: 'Location is required.' })
+    }
+
+    console.log("add to visited", location)
+    if(req.user && !req.user.visited_locations.includes(location)) {
+        req.user.visited_locations.push(location);
+        await req.user.save();
+    }
+
+    return res.status(200).json({
+        message: 'Location added to visited.',
+    });
+})
+
+// Remove visited location by id
+router.post('/visited/remove', auth, async (req: CustomRequest, res: Response) => {
+    const location = req.body.location
+    if (!location) {
+        return res.status(400).json({ error: 'Location is required.' })
+    }
+
+    if(req.user) {
+        console.log("remove", location)
+        req.user.favorite_locations = req.user.favorite_locations.filter((locationId) => {return locationId !== location});
+        await req.user.save();
+    }
+
+    return res.status(200).json({
+        message: 'Location removed from favorites.',
+        // favorites: req.user?.favorite_locations,
+    });
+})
+
+// Get all the visited locations
+router.get('/visited/all', auth, async (req: CustomRequest, res: Response) => {
+    return res.status(200).json(
+        req.user?.visited_locations
+    )
+})
+
+// Update user ranking
+router.patch('/ranking/update', auth, async (req: CustomRequest, res: Response) => {
+    const updates: Partial<IUser> = {
+        ranking: req.body.ranking,
+    }
+
+    if (!req.user) {
+        return res.status(401).json({ error: 'Unauthorized' })
+    }
+
+    const result = await updateRanking(req.user._id.toString(), updates);
+
+    if (result.error) {
+        return res.status(400).json({ error: result.error })
+    }
+
+    return res.status(200).json({ user: result.user })
+});
+
+
+// Get user ranking
+router.get('/ranking/all', auth, async (req: CustomRequest, res: Response) => {
+    if (!req.user) {
+        return res.status(401).json({ error: 'Unauthorized' })
+    }
+    return res.status(200).json({
+        ranking: req.user.ranking,
+    })
+})
+
+// Get usernames and rankings
+router.get('/ranking/users', getAllUsersAndRankings);
 
 
 export default router

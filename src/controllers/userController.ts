@@ -1,5 +1,8 @@
 import User from '../models/user'
 import { IUser } from '../models/user'
+import asyncHandler from "express-async-handler";
+import {NextFunction, Request, Response} from "express";
+import LocationModel from "../models/location";
 
 export const registerUser = async (user: Partial<IUser>) => {
     const { name, email, password } = user
@@ -77,3 +80,34 @@ export const updateUser = async (userId: string, oldPassword: string | undefined
     return { user }
 }
 
+export const updateRanking = async (userId: string, updates: Partial<IUser>) => {
+    const allowedUpdates = ['ranking']
+    const updateFields = Object.keys(updates)
+
+    const user = await User.findById(userId)
+    if (!user) {
+        return { error: 'User not found.' }
+    }
+
+    let count = 0
+
+    updateFields.forEach((field) => {
+        if (allowedUpdates.includes(field) && (updates as any)[field] != '' && (updates as any)[field] != undefined) {
+            (user as any)[field] += (updates as any)[field]
+        } else {
+            count++;
+        }
+    })
+
+    if (count > 1) {
+        return { error: 'No data found.' }
+    }
+
+    await user.save()
+    return { user }
+}
+
+export const getAllUsersAndRankings = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const allUsers = await User.find({}, 'name ranking -_id')
+    res.send(allUsers);
+});

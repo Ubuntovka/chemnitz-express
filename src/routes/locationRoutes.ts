@@ -12,7 +12,7 @@ router.get("/locations/:id", locationController.getLocationById);
 // GET request fot locations by name search
 router.get("/search/location", locationController.getLocationBySearch);
 
-
+// PATCH request to populate addresses
 router.patch("/populate/address", locationController.populateLocation);
 
 export default router;
