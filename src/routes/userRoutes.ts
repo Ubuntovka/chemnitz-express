@@ -1,6 +1,6 @@
 import express, {raw, Request, Response} from 'express'
 import { IUser } from '../models/user'
-import {loginUser, registerUser, updateRanking, updateUser} from '../controllers/userController'
+import {loginUser, registerUser, updateRanking, updateUser, getAllUsersAndRankings} from '../controllers/userController'
 import auth, { CustomRequest } from '../middlewares/auth'
 
 const router = express.Router()
@@ -198,15 +198,17 @@ router.patch('/ranking/update', auth, async (req: CustomRequest, res: Response) 
 
 
 // Get user ranking
-// router.get('/ranking', auth, async (req: CustomRequest, res: Response) => {
-//     if (!req.user) {
-//         return res.status(401).json({ error: 'Unauthorized' })
-//     }
-//
-//     return res.status(200).json({
-//         ranking: req.user.ranking,
-//     })
-// })
+router.get('/ranking/all', auth, async (req: CustomRequest, res: Response) => {
+    if (!req.user) {
+        return res.status(401).json({ error: 'Unauthorized' })
+    }
+    return res.status(200).json({
+        ranking: req.user.ranking,
+    })
+})
+
+// Get usernames and rankings
+router.get('/ranking/users', getAllUsersAndRankings);
 
 
 export default router
