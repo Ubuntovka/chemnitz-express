@@ -11,6 +11,9 @@ export const registerUser = async (user: Partial<IUser>) => {
             error: 'Please provide all the required fields',
         }
     }
+    if (password.length < 8) {
+        return { error: 'Password must be at least 8 characters long' };
+    }
     const existingUser = await User.findOne({ email })
     if (existingUser) {
         return {
