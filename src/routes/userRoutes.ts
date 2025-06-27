@@ -67,12 +67,13 @@ router.patch('/update', auth, async (req: CustomRequest, res: Response) => {
 // Logout user
 router.post('/logout', auth, async (req: CustomRequest, res: Response) => {
     if (req.user) {
-        req.user.tokens = req.user.tokens.filter((token) => {
-            return token.token !== req.token
-        })
-        await req.user.save()
+        req.user.tokens = req.user.tokens.filter((token) => token.token !== req.token)
+        try {
+            await req.user.save();
+        } catch (err) {
+            console.error('Failed to save user during logout:', err);
+        }
     }
-
     return res.status(200).json({
         message: 'User logged out successfully.',
     })
