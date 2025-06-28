@@ -15,7 +15,7 @@ const auth = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
         const token = req.header('Authorization')?.replace('Bearer ', '')
         if (!token) {
-            throw new Error('Authentication failed. Token missing.')
+            return res.status(401).send({ error: 'Authentication token missing' })
         }
 
         const decoded = jwt.verify(token, process.env.JWT_KEY as string) as DecodedToken
@@ -25,7 +25,7 @@ const auth = async (req: CustomRequest, res: Response, next: NextFunction) => {
         })
 
         if (!user) {
-            throw new Error('Authentication failed. User not found.')
+            return res.status(401).send({ error: 'User not found or token invalid' })
         }
 
         req.user = user
