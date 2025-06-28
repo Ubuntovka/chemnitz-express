@@ -25,7 +25,7 @@ interface UserModel extends Model<IUser, {}, IUserMethods> {
 const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     name: { type: String, required: true },
     email: { type: String, required: true },
-    password: { type: String, required: true },
+    password: { type: String, required: true, minlength: 8 },
     favorite_locations: [{ type: String, required: false }],
     tokens: [{ token: { type: String, required: true } }],
     visited_locations: [{ type: String, required: false }],
