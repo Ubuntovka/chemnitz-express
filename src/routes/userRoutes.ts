@@ -199,7 +199,7 @@ router.patch('/ranking/update', auth, async (req: CustomRequest, res: Response) 
 
 
 // Get user ranking
-router.get('/ranking/all', auth, async (req: CustomRequest, res: Response) => {
+router.get('/ranking/me', auth, async (req: CustomRequest, res: Response) => {
     if (!req.user) {
         return res.status(401).json({ error: 'Unauthorized' })
     }
