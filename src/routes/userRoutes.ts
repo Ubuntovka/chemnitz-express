@@ -37,9 +37,7 @@ router.post('/login', async (req: Request, res: Response) => {
 
 // Fetch logged in user
 router.get('/me', auth, async (req: CustomRequest, res: Response) => {
-    return res.status(200).json({
-        user: req.user,
-    })
+    return res.status(200).json(req.user)
 })
 
 
