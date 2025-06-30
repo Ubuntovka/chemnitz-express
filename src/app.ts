@@ -5,6 +5,7 @@ import { connect } from 'mongoose';
 import config from './config/config';
 import cors from "cors";
 import userRoutes from "./routes/userRoutes";
+import reviewRoutes from "./routes/reviewRoutes";
 
 const app = express();
 app.use(express.json());
@@ -21,6 +22,7 @@ app.use(cors());
 // Routes
 app.use('/', locationRoutes);
 app.use('/api/users/', userRoutes);
+app.use('/', reviewRoutes)
 
 // Global error handler (should be after routes)
 app.use(errorHandler);
