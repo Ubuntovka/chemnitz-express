@@ -83,6 +83,17 @@ export const updateUser = async (userId: string, oldPassword: string | undefined
     return { user }
 }
 
+export const deleteUser = async (userId: string) => {
+
+    const user = await User.findById(userId)
+    if (!user) {
+        return { error: 'User not found.' }
+    }
+
+    await user.deleteOne();
+    return { user }
+}
+
 export const updateRanking = async (userId: string, updates: Partial<IUser>) => {
     const allowedUpdates = ['ranking']
     const updateFields = Object.keys(updates)

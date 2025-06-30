@@ -1,6 +1,6 @@
 import express, {raw, Request, Response} from 'express'
 import { IUser } from '../models/user'
-import {loginUser, registerUser, updateRanking, updateUser, getAllUsersAndRankings} from '../controllers/userController'
+import {loginUser, registerUser, updateRanking, updateUser, getAllUsersAndRankings, deleteUser} from '../controllers/userController'
 import auth, { CustomRequest } from '../middlewares/auth'
 
 const router = express.Router()
@@ -59,6 +59,21 @@ router.patch('/update', auth, async (req: CustomRequest, res: Response) => {
     }
 
     return res.status(200).json({ user: result.user })
+})
+
+router.delete('/delete', auth, async (req: CustomRequest, res: Response) => {
+    if (!req.user) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const result = await deleteUser(req.user._id.toString());
+
+    if (result.error) {
+        return res.status(400).json({ error: result.error });
+    }
+
+    return res.status(200).json({ message: 'User deleted successfully.', user: result.user });
+
 })
 
 
