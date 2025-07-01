@@ -9,20 +9,16 @@ export interface IReview extends Document {
     createdAt: Date
 }
 
-// export interface IReviewMethods {
-//     toJSON(): IReview
-// }
-
 interface ReviewModel extends Model<IReview, {}> {
     findByCredentials(email: string, password: string): Promise<HydratedDocument<IReview>>
 }
 
 const reviewSchema = new Schema<IReview, ReviewModel>({
-    user: { type: Schema.Types.ObjectId, ref: 'User' },
-    location: { type: Schema.Types.ObjectId, ref: 'Location' },
-    rating: { type: Schema.Types.Number, required: true },
-    comment: { type: Schema.Types.String, default: "" },
-    createdAt: { type: Date, required: true },
+    user: {type: Schema.Types.ObjectId, ref: 'User'},
+    location: {type: Schema.Types.ObjectId, ref: 'Location'},
+    rating: {type: Schema.Types.Number, required: true},
+    comment: {type: Schema.Types.String, default: ""},
+    createdAt: {type: Date, required: true},
 })
 
 const Review = model<IReview, ReviewModel>('Review', reviewSchema);
