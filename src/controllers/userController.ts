@@ -1,26 +1,25 @@
 import User from '../models/user'
-import { IUser } from '../models/user'
+import {IUser} from '../models/user'
 import asyncHandler from "express-async-handler";
 import {NextFunction, Request, Response} from "express";
-import LocationModel from "../models/location";
 
 export const registerUser = async (user: Partial<IUser>) => {
-    const { name, email, password } = user
+    const {name, email, password} = user
     if (!name || !email || !password) {
         return {
             error: 'Please provide all the required fields',
         }
     }
     if (password.length < 8) {
-        return { error: 'Password must be at least 8 characters long' };
+        return {error: 'Password must be at least 8 characters long'};
     }
-    const existingUser = await User.findOne({ email })
+    const existingUser = await User.findOne({email})
     if (existingUser) {
         return {
             error: 'User with that email already exists.',
         }
     }
-    const newUser = new User({ name, email, password })
+    const newUser = new User({name, email, password})
     await newUser.save()
     const token = await newUser.generateAuthToken()
     return {
@@ -30,7 +29,7 @@ export const registerUser = async (user: Partial<IUser>) => {
 }
 
 export const loginUser = async (user: Partial<IUser>) => {
-    const { email, password } = user
+    const {email, password} = user
     if (!email || !password) {
         return {
             error: 'Please provide all the required fields',
@@ -51,18 +50,18 @@ export const updateUser = async (userId: string, oldPassword: string | undefined
     const allowedUpdates = ['name', 'email', 'password']
     const updateFields = Object.keys(updates)
 
-    if (oldPassword === ''){
+    if (oldPassword === '') {
         return {error: 'Please provide password.'}
     }
 
     const user = await User.findById(userId)
     if (!user) {
-        return { error: 'User not found.' }
+        return {error: 'User not found.'}
     }
 
 
     if (!await User.findByCredentials(user.email, oldPassword!)) {
-        return { error: 'Wrong password' }
+        return {error: 'Wrong password'}
     }
 
     let count = 0
@@ -76,22 +75,22 @@ export const updateUser = async (userId: string, oldPassword: string | undefined
     })
 
     if (count > 2) {
-        return { error: 'No data found.' }
+        return {error: 'No data found.'}
     }
 
     await user.save()
-    return { user }
+    return {user}
 }
 
 export const deleteUser = async (userId: string) => {
 
     const user = await User.findById(userId)
     if (!user) {
-        return { error: 'User not found.' }
+        return {error: 'User not found.'}
     }
 
     await user.deleteOne();
-    return { user }
+    return {user}
 }
 
 export const updateRanking = async (userId: string, updates: Partial<IUser>) => {
@@ -100,7 +99,7 @@ export const updateRanking = async (userId: string, updates: Partial<IUser>) => 
 
     const user = await User.findById(userId)
     if (!user) {
-        return { error: 'User not found.' }
+        return {error: 'User not found.'}
     }
 
     let count = 0
@@ -114,11 +113,11 @@ export const updateRanking = async (userId: string, updates: Partial<IUser>) => 
     })
 
     if (count > 1) {
-        return { error: 'No data found.' }
+        return {error: 'No data found.'}
     }
 
     await user.save()
-    return { user }
+    return {user}
 }
 
 export const getAllUsersAndRankings = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

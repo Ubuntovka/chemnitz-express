@@ -1,7 +1,14 @@
 import express, {raw, Request, Response} from 'express'
-import { IUser } from '../models/user'
-import {loginUser, registerUser, updateRanking, updateUser, getAllUsersAndRankings, deleteUser} from '../controllers/userController'
-import auth, { CustomRequest } from '../middlewares/auth'
+import {IUser} from '../models/user'
+import {
+    loginUser,
+    registerUser,
+    updateRanking,
+    updateUser,
+    getAllUsersAndRankings,
+    deleteUser
+} from '../controllers/userController'
+import auth, {CustomRequest} from '../middlewares/auth'
 
 const router = express.Router()
 
@@ -49,30 +56,30 @@ router.patch('/update', auth, async (req: CustomRequest, res: Response) => {
     }
 
     if (!req.user) {
-        return res.status(401).json({ error: 'Unauthorized' })
+        return res.status(401).json({error: 'Unauthorized'})
     }
 
     const result = await updateUser(req.user._id.toString(), req.body.oldPassword, updates)
 
     if (result.error) {
-        return res.status(400).json({ error: result.error })
+        return res.status(400).json({error: result.error})
     }
 
-    return res.status(200).json({ user: result.user })
+    return res.status(200).json({user: result.user})
 })
 
 router.delete('/delete', auth, async (req: CustomRequest, res: Response) => {
     if (!req.user) {
-        return res.status(401).json({ error: 'Unauthorized' });
+        return res.status(401).json({error: 'Unauthorized'});
     }
 
     const result = await deleteUser(req.user._id.toString());
 
     if (result.error) {
-        return res.status(400).json({ error: result.error });
+        return res.status(400).json({error: result.error});
     }
 
-    return res.status(200).json({ message: 'User deleted successfully.', user: result.user });
+    return res.status(200).json({message: 'User deleted successfully.', user: result.user});
 
 })
 
@@ -107,36 +114,36 @@ router.post('/logoutall', auth, async (req: CustomRequest, res: Response) => {
 router.post('/favorite/add', auth, async (req: CustomRequest, res: Response) => {
     const location = req.body.location
     if (!location) {
-        return res.status(400).json({ error: 'Location is required.' })
+        return res.status(400).json({error: 'Location is required.'})
     }
 
     console.log("add", location)
-    if(req.user && !req.user.favorite_locations.includes(location)) {
+    if (req.user && !req.user.favorite_locations.includes(location)) {
         req.user.favorite_locations.push(location);
         await req.user.save();
     }
 
     return res.status(200).json({
-        message: 'Location added to favorites.',
-        // favorites: req.user?.favorite_locations,
+        message: 'Location added to favorites.'
     });
 })
 
 router.post('/favorite/remove', auth, async (req: CustomRequest, res: Response) => {
     const location = req.body.location
     if (!location) {
-        return res.status(400).json({ error: 'Location is required.' })
+        return res.status(400).json({error: 'Location is required.'})
     }
 
-    if(req.user) {
+    if (req.user) {
         console.log("remove", location)
-        req.user.favorite_locations = req.user.favorite_locations.filter((locationId) => {return locationId !== location});
+        req.user.favorite_locations = req.user.favorite_locations.filter((locationId) => {
+            return locationId !== location
+        });
         await req.user.save();
     }
 
     return res.status(200).json({
-        message: 'Location removed from favorites.',
-        // favorites: req.user?.favorite_locations,
+        message: 'Location removed from favorites.'
     });
 })
 
@@ -151,11 +158,11 @@ router.get('/favorites', auth, async (req: CustomRequest, res: Response) => {
 router.post('/visited/add', auth, async (req: CustomRequest, res: Response) => {
     const location = req.body.location
     if (!location) {
-        return res.status(400).json({ error: 'Location is required.' })
+        return res.status(400).json({error: 'Location is required.'})
     }
 
     console.log("add to visited", location)
-    if(req.user && !req.user.visited_locations.includes(location)) {
+    if (req.user && !req.user.visited_locations.includes(location)) {
         req.user.visited_locations.push(location);
         await req.user.save();
     }
@@ -169,12 +176,14 @@ router.post('/visited/add', auth, async (req: CustomRequest, res: Response) => {
 router.post('/visited/remove', auth, async (req: CustomRequest, res: Response) => {
     const location = req.body.location
     if (!location) {
-        return res.status(400).json({ error: 'Location is required.' })
+        return res.status(400).json({error: 'Location is required.'})
     }
 
-    if(req.user) {
+    if (req.user) {
         console.log("remove", location)
-        req.user.favorite_locations = req.user.favorite_locations.filter((locationId) => {return locationId !== location});
+        req.user.favorite_locations = req.user.favorite_locations.filter((locationId) => {
+            return locationId !== location
+        });
         await req.user.save();
     }
 
@@ -198,23 +207,23 @@ router.patch('/ranking/update', auth, async (req: CustomRequest, res: Response) 
     }
 
     if (!req.user) {
-        return res.status(401).json({ error: 'Unauthorized' })
+        return res.status(401).json({error: 'Unauthorized'})
     }
 
     const result = await updateRanking(req.user._id.toString(), updates);
 
     if (result.error) {
-        return res.status(400).json({ error: result.error })
+        return res.status(400).json({error: result.error})
     }
 
-    return res.status(200).json({ user: result.user })
+    return res.status(200).json({user: result.user})
 });
 
 
 // Get user ranking
 router.get('/ranking/me', auth, async (req: CustomRequest, res: Response) => {
     if (!req.user) {
-        return res.status(401).json({ error: 'Unauthorized' })
+        return res.status(401).json({error: 'Unauthorized'})
     }
     return res.status(200).json({
         ranking: req.user.ranking,

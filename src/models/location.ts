@@ -404,5 +404,4 @@ const locationSchema: Schema = new Schema({
     }
 });
 
-// The third argument ('locations') sets the MongoDB collection name
 export default mongoose.model<ILocation>('location', locationSchema, 'locations');

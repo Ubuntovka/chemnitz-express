@@ -24,7 +24,7 @@ app.use('/', locationRoutes);
 app.use('/api/users/', userRoutes);
 app.use('/', reviewRoutes)
 
-// Global error handler (should be after routes)
+// Global error handler
 app.use(errorHandler);
 
 export default app;
