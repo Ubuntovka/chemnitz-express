@@ -15,6 +15,7 @@ export interface IUser extends Document {
 
 export interface IUserMethods {
     generateAuthToken(): Promise<string>
+
     toJSON(): IUser
 }
 
@@ -23,13 +24,13 @@ interface UserModel extends Model<IUser, {}, IUserMethods> {
 }
 
 const userSchema = new Schema<IUser, UserModel, IUserMethods>({
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-    password: { type: String, required: true, minlength: 8 },
-    favorite_locations: [{ type: String, required: false }],
-    tokens: [{ token: { type: String, required: true } }],
-    visited_locations: [{ type: String, required: false }],
-    ranking: { type: Number, default: 0 },
+    name: {type: String, required: true},
+    email: {type: String, required: true},
+    password: {type: String, required: true, minlength: 8},
+    favorite_locations: [{type: String, required: false}],
+    tokens: [{token: {type: String, required: true}}],
+    visited_locations: [{type: String, required: false}],
+    ranking: {type: Number, default: 0},
 })
 
 userSchema.pre('save', async function (next) {
@@ -41,8 +42,8 @@ userSchema.pre('save', async function (next) {
 
 userSchema.methods.generateAuthToken = async function () {
     const user = this
-    const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_KEY as string)
-    user.tokens = user.tokens.concat({ token })
+    const token = jwt.sign({_id: user._id.toString()}, process.env.JWT_KEY as string)
+    user.tokens = user.tokens.concat({token})
     await user.save()
     return token
 }
@@ -56,7 +57,7 @@ userSchema.methods.toJSON = function () {
 }
 
 userSchema.statics.findByCredentials = async (email, password) => {
-    const user = await User.findOne({ email })
+    const user = await User.findOne({email})
     if (!user) {
         return null
     }

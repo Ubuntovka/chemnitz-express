@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express'
+import {Request, Response, NextFunction} from 'express'
 import jwt from 'jsonwebtoken'
-import User, { IUser } from '../models/user'
+import User, {IUser} from '../models/user'
 
 export interface CustomRequest extends Request {
     user?: IUser
@@ -15,7 +15,7 @@ const auth = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
         const token = req.header('Authorization')?.replace('Bearer ', '')
         if (!token) {
-            return res.status(401).send({ error: 'Authentication token missing' })
+            return res.status(401).send({error: 'Authentication token missing'})
         }
 
         const decoded = jwt.verify(token, process.env.JWT_KEY as string) as DecodedToken
@@ -25,14 +25,14 @@ const auth = async (req: CustomRequest, res: Response, next: NextFunction) => {
         })
 
         if (!user) {
-            return res.status(401).send({ error: 'User not found or token invalid' })
+            return res.status(401).send({error: 'User not found or token invalid'})
         }
 
         req.user = user
         req.token = token
         next()
     } catch (error) {
-        res.status(401).send({ error: 'Authentication failed.' })
+        res.status(401).send({error: 'Authentication failed.'})
     }
 }
 
