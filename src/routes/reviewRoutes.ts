@@ -8,4 +8,7 @@ router.get('/reviews/all', reviewController.getAllReviews)
 
 router.post('/reviews/add', auth, reviewController.addReview)
 
+router.get('/reviews/user', auth, reviewController.getReviewsByUser);
+
+
 export default router;

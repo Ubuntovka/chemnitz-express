@@ -20,6 +20,17 @@ const getAllReviews = asyncHandler(async (req: Request, res: Response, next: Nex
 //     res.status(200).json(reviews)
 // })
 
+// GET /reviews/user
+const getReviewsByUser = async (req: CustomRequest, res: Response) => {
+    if (!req.user) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const reviews = await ReviewModel.find({ user: req.user._id });
+
+    res.status(200).json(reviews);
+};
+
 // POST /reviews/add
 const addReview = async (req: CustomRequest, res: Response) => {
     const { rating, comment, locationId } = req.body
@@ -60,4 +71,5 @@ const addReview = async (req: CustomRequest, res: Response) => {
 export default {
     getAllReviews,
     addReview,
+    getReviewsByUser,
 };
