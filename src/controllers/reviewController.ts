@@ -35,7 +35,6 @@ const addReview = async (req: CustomRequest, res: Response) => {
         return res.status(400).json({error: 'rating and locationId are required'})
     }
 
-    // Optional: prevent duplicate reviews
     const existingReview = await ReviewModel.findOne({
         user: req.user._id,
         location: locationId,
@@ -56,8 +55,23 @@ const addReview = async (req: CustomRequest, res: Response) => {
     res.status(201).json(review)
 }
 
+// GET /reviews/location/:locationId
+const getReviewsByLocation = asyncHandler(async (req: Request, res: Response) => {
+    const {locationId} = req.params;
+
+    if (!locationId) {
+        res.status(400).json({error: 'locationId is required'});
+    }
+
+    const reviews = await ReviewModel.find({location: locationId});
+
+    res.status(200).json(reviews);
+});
+
+
 export default {
     getAllReviews,
     addReview,
     getReviewsByUser,
+    getReviewsByLocation,
 };
