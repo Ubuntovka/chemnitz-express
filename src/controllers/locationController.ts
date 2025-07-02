@@ -2,27 +2,50 @@ import LocationModel from '../models/location';
 import asyncHandler from 'express-async-handler';
 import { Request, Response, NextFunction } from 'express';
 import axios from 'axios';
+import mongoose from "mongoose";
 
 const getAllLocations = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const allLocations = await LocationModel.find({}).exec();
-    res.send(allLocations);
+    res.status(200).json(allLocations);
 });
 
 const getLocationById = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const oneLocation = await LocationModel.findById(req.params.id);
-    res.send(oneLocation);
+    const id = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        res.status(400).json({ error: 'Invalid location ID' });
+    }
+
+    const oneLocation = await LocationModel.findById(id);
+    if (!oneLocation) {
+        res.status(404).json({ error: 'Location not found' });
+    }
+
+    res.status(200).json(oneLocation);
 })
 
 const getLocationBySearch = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const search = req.query.search as string;
+
+    if (!search) {
+        res.status(400).json({ error: 'Missing search query parameter' });
+    }
+
     const searchedLocation = await LocationModel.find({
-        'properties.name': { $regex: req.query.search, $options: 'i' }
+        'properties.name': { $regex: search, $options: 'i' }
     });
-    res.send(searchedLocation);
+
+    res.status(200).json(searchedLocation);
 })
 
 const populateLocation = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const locations = await LocationModel.find({
-        'properties.addr:street': { $in: [null, '', undefined]}
+        $or: [
+            { 'properties.addr:street': { $in: [null, '', undefined] } },
+            { 'properties.addr:city': { $in: [null, '', undefined] } },
+            { 'properties.addr:housenumber': { $in: [null, '', undefined] } },
+            { 'properties.addr:postcode': { $in: [null, '', undefined] } },
+        ]
     });
 
     let updatedCount = 0;
@@ -63,7 +86,7 @@ const populateLocation = asyncHandler(async (req: Request, res: Response, next: 
         }
     }
 
-    res.send({ message: `${updatedCount} locations updated.` });
+    res.status(200).json({ message: `${updatedCount} locations updated.` });
 })
 
 
