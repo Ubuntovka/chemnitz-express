@@ -5,7 +5,7 @@ import {CustomRequest} from "../middlewares/auth";
 
 const getAllReviews = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const allLocations = await ReviewModel.find({}).exec();
-    res.send(allLocations);
+    res.status(200).json(allLocations);
 });
 
 // GET /reviews/user
