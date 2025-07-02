@@ -1,7 +1,7 @@
 import express from 'express';
 import locationRoutes from './routes/locationRoutes';
-import { errorHandler } from './middlewares/errorHandler';
-import { connect } from 'mongoose';
+import {errorHandler} from './middlewares/errorHandler';
+import {connect} from 'mongoose';
 import config from './config/config';
 import cors from "cors";
 import userRoutes from "./routes/userRoutes";
