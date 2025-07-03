@@ -1,9 +1,6 @@
 import mongoose, {Schema, Document} from 'mongoose';
 
 export interface ILocation extends Document {
-    _id: {
-        $oid: string;
-    };
     type: string;
     id?: string;
     geometry: {
@@ -193,10 +190,6 @@ export interface ILocation extends Document {
 }
 
 const locationSchema: Schema = new Schema({
-    _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true
-    },
     type: {
         type: String,
         required: true,
