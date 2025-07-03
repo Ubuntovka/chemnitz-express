@@ -43,12 +43,35 @@ Start the server in development mode using:
 ```bash
 npm run dev
 ```
-
 This uses **ts-node** and **nodemon** for automatic reload on code changes.
 
+or
+```bash
+npm run build
+npm start
+```
+It compiles TypeScript into JavaScript and runs the compiled server
 
-## Available Commands
+---
 
-* `npm run dev` - Run the development server with hot reload
-* `npm run build` - Compile TypeScript into JavaScript
-* `npm start` - Run the compiled server
+## Set up a database
+
+### 1. Install MongoDB 
+Set up MongoDB locally.
+
+### 2. Add collections
+- Reviews
+- Locations
+- Users
+
+### 3. GeoJSON
+Populate "Locations" collection using the provided GeoJSON dataset containing locations in Chemnitz.
+
+### 4. Fill the missing data
+To fill the missing address data, run the express server according to the instructions given above and 
+then run the patch request:
+```bash
+localhost:3000/populate/address
+```
+It might take some time. After it is done, it will return a string with the amount of updated locations.
+
