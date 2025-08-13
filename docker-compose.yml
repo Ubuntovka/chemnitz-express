@@ -1,0 +1,26 @@
+services:
+  app:
+    image: test/chemnitz-express
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:6.0
+    hostname: mongodb
+#    env_file:
+#      - mongo.env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: administratorsha
+      MONGO_INITDB_ROOT_PASSWORD: Q0d23Ke6ug7u
+    volumes:
+      - express:/data/db
+    ports:
+      - "4000:27017"
+
+volumes:
+  express:
+    external: true
