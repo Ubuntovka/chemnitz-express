@@ -28,17 +28,16 @@ jobs:
           tags: ghcr.io/${{ secrets.GHCR_USERNAME }}/chemnitz-express:latest
 
   deploy:
-    name: Deploy to Hetzner
     runs-on: ubuntu-latest
     needs: build
 
     steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.2.0
+      - name: Deploy to Hetzner via SSH
+        uses: appleboy/ssh-action@v1.6.0
         with:
           host: ${{ secrets.HETZNER_HOST }}
           username: ${{ secrets.HETZNER_USER }}
-          password: ${{ secrets.HETZNER_PASSWORD }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
           script: |
             docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} -p ${{ secrets.GHCR_TOKEN }}
             docker pull ghcr.io/${{ secrets.GHCR_USERNAME }}/chemnitz-express:latest
