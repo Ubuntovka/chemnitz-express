@@ -21,6 +21,15 @@ services:
     ports:
       - "4000:27017"
 
+  angular:
+    image: test/chemnitz-angular
+    ports:
+      - "1234:80"
+    depends_on:
+      - app
+
+
+
 volumes:
   express:
     external: true
