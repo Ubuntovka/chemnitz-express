@@ -27,20 +27,20 @@ jobs:
           push: true
           tags: ghcr.io/${{ secrets.GHCR_USERNAME }}/chemnitz-express:latest
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: build
 
-    steps:
-      - name: Deploy to Hetzner via SSH
-        uses: appleboy/ssh-action@v0.1.6
-        with:
-          host: ${{ secrets.HETZNER_HOST }}
-          username: ${{ secrets.HETZNER_USER }}
-          key: ${{ secrets.HETZNER_SSH_KEY }}
-          script: |
-            docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} -p ${{ secrets.GHCR_TOKEN }}
-            docker pull ghcr.io/${{ secrets.GHCR_USERNAME }}/chemnitz-express:latest
-            docker stop chemnitz-express || true
-            docker rm chemnitz-express || true
-            docker run -d --name chemnitz-express -p 3000:3000 ghcr.io/${{ secrets.GHCR_USERNAME }}/chemnitz-express:latest
+  #   steps:
+  #     - name: Deploy to Hetzner via SSH
+  #       uses: appleboy/ssh-action@v0.1.6
+  #       with:
+  #         host: ${{ secrets.HETZNER_HOST }}
+  #         username: ${{ secrets.HETZNER_USER }}
+  #         key: ${{ secrets.HETZNER_SSH_KEY }}
+  #         script: |
+  #           docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} -p ${{ secrets.GHCR_TOKEN }}
+  #           docker pull ghcr.io/${{ secrets.GHCR_USERNAME }}/chemnitz-express:latest
+  #           docker stop chemnitz-express || true
+  #           docker rm chemnitz-express || true
+  #           docker run -d --name chemnitz-express -p 3000:3000 ghcr.io/${{ secrets.GHCR_USERNAME }}/chemnitz-express:latest
