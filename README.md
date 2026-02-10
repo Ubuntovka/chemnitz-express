@@ -1,5 +1,15 @@
 # Chemnitz Express
 
+A TypeScript-based Express.js REST API for managing locations, reviews, and users in Chemnitz, Germany. The application provides endpoints for location discovery, user authentication with JWT, and community-driven reviews with a ranking system.
+
+## 📚 Documentation
+
+For detailed documentation, see the [docs](./docs) folder:
+- [Database Setup](./docs/database.md) - MongoDB configuration and data initialization
+- [Architecture](./docs/architecture.md) - Project structure and design patterns
+- [Authentication](./docs/auth.md) - JWT authentication and authorization
+- [API Reference](./docs/api.md) - Available endpoints and usage examples
+
 ## Getting Started
 
 Follow the steps below to set up and run the project locally:
